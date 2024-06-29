@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Class Grade Calculator</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+    label {
+        font-weight: bold;
+    }
+    input[type="number"] {
+        width: 60px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+    .result {
+        margin-top: 20px;
+        font-size: 18px;
+    }
+</style>
+</head>
+<body>
+    <h2>Class Grade Calculator</h2>
+    <form id="gradeForm">
+        <label for="numStudents">Number of students:</label>
+        <input type="number" id="numStudents" name="numStudents" min="1" required><br><br>
+        
+        <div id="studentInputs"></div>
+
+        <button type="button" onclick="generateStudentInputs()">Generate Form</button>
+        <button type="submit">Calculate Grades</button>
+    </form>
+    
+    <div class="result" id="result"></div>
+
+    <script>
+        function generateStudentInputs() {
+            var numStudents = parseInt(document.getElementById('numStudents').value);
+            var studentInputsDiv = document.getElementById('studentInputs');
+            studentInputsDiv.innerHTML = '';
+
+            for (var i = 1; i <= numStudents; i++) {
+                var studentDiv = document.createElement('div');
+                studentDiv.className = 'student';
+                studentDiv.innerHTML = '<h3>Student ' + i + '</h3>' +
+                                       '<label for="subject1_' + i + '">Subject 1:</label>' +
+                                       '<input type="number" id="subject1_' + i + '" name="subject1_' + i + '" min="0" max="100" required><br>' +
+                                       '<label for="subject2_' + i + '">Subject 2:</label>' +
+                                       '<input type="number" id="subject2_' + i + '" name="subject2_' + i + '" min="0" max="100" required><br>' +
+                                       '<label for="subject3_' + i + '">Subject 3:</label>' +
+                                       '<input type="number" id="subject3_' + i + '" name="subject3_' + i + '" min="0" max="100" required><br>' +
+                                       '<label for="subject4_' + i + '">Subject 4:</label>' +
+                                       '<input type="number" id="subject4_' + i + '" name="subject4_' + i + '" min="0" max="100" required><br>' +
+                                       '<label for="subject5_' + i + '">Subject 5:</label>' +
+                                       '<input type="number" id="subject5_' + i + '" name="subject5_' + i + '" min="0" max="100" required><br><br>';
+                studentInputsDiv.appendChild(studentDiv);
+            }
+        }
+
+        document.getElementById('gradeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var numStudents = parseInt(document.getElementById('numStudents').value);
+            var results = [];
+
+            for (var i = 1; i <= numStudents; i++) {
+                var subject1 = parseFloat(document.getElementById('subject1_' + i).value);
+                var subject2 = parseFloat(document.getElementById('subject2_' + i).value);
+                var subject3 = parseFloat(document.getElementById('subject3_' + i).value);
+                var subject4 = parseFloat(document.getElementById('subject4_' + i).value);
+                var subject5 = parseFloat(document.getElementById('subject5_' + i).value);
+
+                var totalMarks = subject1 + subject2 + subject3 + subject4 + subject5;
+                var averageMarks = totalMarks / 5;
+
+                var grade;
+                if (averageMarks >= 90) {
+                    grade = 'A';
+                } else if (averageMarks >= 80) {
+                    grade = 'B';
+                } else if (averageMarks >= 70) {
+                    grade = 'C';
+                } else if (averageMarks >= 60) {
+                    grade = 'D';
+                } else {
+                    grade = 'F';
+                }
+
+                results.push({
+                    student: 'Student ' + i,
+                    totalMarks: totalMarks.toFixed(2),
+                    averageMarks: averageMarks.toFixed(2),
+                    grade: grade
+                });
+            }
+
+            // Display results in a table
+            var resultElement = document.getElementById('result');
+            resultElement.innerHTML = '<h3>Class Results</h3>';
+            resultElement.innerHTML += '<table><thead><tr><th>Student</th><th>Total Marks</th><th>Average Marks</th><th>Character Grade</th></tr></thead><tbody>';
+            results.forEach(function(result) {
+                resultElement.innerHTML += '<tr><td>' + result.student + '</td><td>' + result.totalMarks + '</td><td>' + result.averageMarks + '</td><td>' + result.grade + '</td></tr>';
+            });
+            resultElement.innerHTML += '</tbody></table>';
+        });
+    </script>
+</body>
+</html>
